@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/mralexandernickel/ngx-picture.svg?branch=master)](https://travis-ci.org/mralexandernickel/ngx-picture)
 [![Coverage Status](https://coveralls.io/repos/github/mralexandernickel/ngx-picture/badge.svg?branch=master)](https://coveralls.io/github/mralexandernickel/ngx-picture?branch=master)
+[![npm version](https://badge.fury.io/js/%40mralexandernickel%2Fngx-picture.svg)](https://www.npmjs.com/@mralexandernickel/ngx-picture)
 
 # Ngx Picture
 
