@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@mralexandernickel/ngx-picture": [
+        "dist/ngx-picture"
+      ],
+      "@mralexandernickel/ngx-picture/*": [
+        "dist/ngx-picture/*"
+      ]
+    }
   }
 }
