@@ -9,6 +9,10 @@
 - Image.decode
 - ChangeDetectionStrategy.OnPush
 
+## Demo
+
+Here you can find a simple [Demo Application](https://mralexandernickel.github.io/ngx-picture/)
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
