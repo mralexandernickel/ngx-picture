@@ -1,4 +1,4 @@
- language: node_js
+language: node_js
 sudo: required
 dist: trusty
 node_js:
@@ -6,7 +6,7 @@ node_js:
 cache:
   yarn: true
   directories:
-     - ./node_modules
+    - ./node_modules
 deploy:
   provider: pages
   skip-cleanup: true
@@ -15,4 +15,3 @@ deploy:
   local-dir: dist/ngx-picture-demo
   on:
     branch: master
-
