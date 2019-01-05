@@ -30,4 +30,30 @@ describe('PictureComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should teardown clean', () => {
+    const spyDestroyed$: jasmine.Spy = spyOn(component.destroyed$, 'next');
+    const spyCurrentImage$: jasmine.Spy = spyOn(
+      component.currentImage$,
+      'complete'
+    );
+    const spyUnobserve: jasmine.Spy = spyOn(
+      component.intersectionObserverService,
+      'unobserveElement'
+    );
+    component.ngOnDestroy();
+    expect(spyDestroyed$).toHaveBeenCalled();
+    expect(spyCurrentImage$).toHaveBeenCalled();
+    expect(spyUnobserve).toHaveBeenCalled();
+  });
+
+  it('should emit directly if preload is false', () => {
+    component.preload = false;
+    const spyCurrentImage$: jasmine.Spy = spyOn(
+      component.currentImage$,
+      'next'
+    );
+    component.setImage();
+    expect(spyCurrentImage$).toHaveBeenCalled();
+  });
 });

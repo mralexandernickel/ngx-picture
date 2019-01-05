@@ -31,19 +31,19 @@ export class NgxPictureComponent implements OnInit, OnDestroy {
     width: 1
   };
 
-  public currentImage: BehaviorSubject<any> = new BehaviorSubject<any>(
+  public currentImage$: BehaviorSubject<any> = new BehaviorSubject<any>(
     this.fallbackImage
   );
 
   public currentSize: string;
 
-  private destroyed$ = new Subject();
+  public destroyed$ = new Subject();
 
   constructor(
-    private intersectionObserverService: IntersectionObserverService,
-    private elRef: ElementRef,
-    private breakpointObserver: BreakpointObserver,
-    private cr: ChangeDetectorRef,
+    public intersectionObserverService: IntersectionObserverService,
+    public elRef: ElementRef,
+    public breakpointObserver: BreakpointObserver,
+    public cr: ChangeDetectorRef,
     @Inject(BREAKPOINTS) public breakpoints: BreakPoint[]
   ) {}
 
@@ -75,7 +75,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy {
       // If browser supports Image.decode
       if (img.decode) {
         img.decode().then(() => {
-          this.currentImage.next(this.images[this.currentSize]);
+          this.currentImage$.next(this.images[this.currentSize]);
         });
 
         return;
@@ -83,14 +83,14 @@ export class NgxPictureComponent implements OnInit, OnDestroy {
 
       // Browser doesn't support Image.decode, fall back to regular onload
       (img as HTMLImageElement).onload = (e: Event) => {
-        this.currentImage.next(this.images[this.currentSize]);
+        this.currentImage$.next(this.images[this.currentSize]);
       };
 
       return;
     }
 
     // If this.preload is false, emit directly
-    this.currentImage.next(this.images[this.currentSize]);
+    this.currentImage$.next(this.images[this.currentSize]);
   }
 
   public observeElement(): void {
@@ -107,7 +107,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.destroyed$.next(true);
-    this.currentImage.complete();
+    this.currentImage$.complete();
     this.intersectionObserverService.unobserveElement(this.elRef.nativeElement);
   }
 }
