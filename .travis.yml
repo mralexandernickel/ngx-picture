@@ -7,11 +7,20 @@ cache:
   yarn: true
   directories:
     - ./node_modules
+before_deploy:
+  - cd $TRAVIS_BUILD_DIR/dist/ngx-picture
 deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  keep-history: true
-  local-dir: dist/ngx-picture-demo
-  on:
-    branch: master
+  - provider: npm
+    email: mr.alexander.nickel@gmail.com
+    skip_cleanup: true
+    api_key:
+      secure: hBGLyDmzx4MC7j2aKfX0kmrwq7l00scvMFKdDWet31bjFHo/88jLHggxCuSusYPffTmoudG3ZiONdPib+0pdRGa+QmeqBrQCmpF+jBPzrfQyYk+hc1pOmTvcZyORjPzP16F1Su8Tu5eKBhbkLxo2CvYG3wXeHwu1MCtNFlvNL2PUHcKgtFbG7Ysx1e3OYifjLwMZUt/fian/gf5snmX2czYxxgyoSfEfxxRIagghjFTfTE3GGom2od0eiSeENWS7iH/51Na8VZJEpwz8CpI1246ZNMceE6+CPp4Jigb6d991MwI5I39oyl9vOUYXHbdbkJg704VXZ0ALW6/Be7wqL+l1ODdzKCG/z3r/PhTSD00S7PTuj8NcBHsr7O5HW1T78XGTU+7roXEp2Z6HsPfTjpCau95O2xgLEHzRWoXm8wjHc1QEmAAR8KQe4CEHKLsq/ZIhyLVxjt1Rpgg8AsdOofZ/Ai+ZIRE2bMekE42cGR851hSbQPJ55UELYiz806M/b4Eurd7ApCKzRPiBmx+yCl33p/+hSxGqLyM2ni44Zmpgfy5AZF4QlCVTSgvGlZOzNH7qF+0ZxFRt+9ke4X9W5Gwc99zix0HKv2ZCpK3COrY7yCVljB+cZ8ZEo5wnve+C1jGEvQPRn4ILmEfwpDacPvOcS7wZLdlP8CqISVSwd30=
+    on:
+      repo: mralexandernickel/ngx-picture
+  - provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    keep-history: true
+    local-dir: dist/ngx-picture-demo
+    on:
+      branch: master
