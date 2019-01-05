@@ -1,0 +1,18 @@
+ language: node_js
+sudo: required
+dist: trusty
+node_js:
+  - '10.9.0'
+cache:
+  yarn: true
+  directories:
+     - ./node_modules
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  local-dir: dist/ngx-picture-demo
+  on:
+    branch: master
+

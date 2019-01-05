@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-const IMAGES = ['components', 'augury', 'animations', 'cli', 'compiler'];
-const sizes = ['xs', 'sm', 'md', 'lg', 'xl'];
-const widths = [200, 300, 400, 500, 600];
+import { createImages } from '@mralexandernickel/ngx-picture';
 
 @Component({
   selector: 'app-root',
@@ -11,29 +8,7 @@ const widths = [200, 300, 400, 500, 600];
 })
 export class AppComponent implements OnInit {
   title = 'angular-lazyload';
-  public items: any[] = [];
+  public items: any[] = createImages(1);
 
-  private createItems(): void {
-    const items = 1;
-    let i = 0;
-    while (i < items) {
-      const data = {};
-
-      for (let index = 0; index < sizes.length; index++) {
-        const size = sizes[index];
-        data[size] = {
-          url: `https://angular.io/generated/images/marketing/concept-icons/${
-            IMAGES[index]
-          }.svg`,
-          width: widths[index]
-        };
-      }
-      this.items.push(data);
-      i++;
-    }
-  }
-
-  public ngOnInit(): void {
-    this.createItems();
-  }
+  public ngOnInit(): void {}
 }

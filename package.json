@@ -5,7 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
+    "pretest": "ng build ngx-picture && ng build --prod --base-href=/ngx-picture/",
+    "test": "ng test --project ngx-picture --watch=false --code-coverage",
+    "posttest": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
