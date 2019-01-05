@@ -1,6 +1,9 @@
 {
   "name": "@mralexandernickel/ngx-picture",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "@angular/common": "^7.1.0",
     "@angular/core": "^7.1.0",
