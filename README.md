@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/mralexandernickel/ngx-picture.svg?branch=master)](https://travis-ci.org/mralexandernickel/ngx-picture)
+[![Coverage Status](https://coveralls.io/repos/github/mralexandernickel/ngx-picture/badge.svg?branch=master)](https://coveralls.io/github/mralexandernickel/ngx-picture?branch=master)
+
 # Ngx Picture
 
 - Lazyloaded
