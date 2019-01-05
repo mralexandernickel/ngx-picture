@@ -2,20 +2,20 @@ language: node_js
 sudo: required
 dist: trusty
 node_js:
-  - '10.9.0'
+  - 10.9.0
 cache:
   yarn: true
   directories:
-    - ./node_modules
+    - './node_modules'
 before_deploy:
   - cd $TRAVIS_BUILD_DIR/dist/ngx-picture
 deploy:
   - provider: npm
     email: mr.alexander.nickel@gmail.com
-    skip_cleanup: true
     api_key:
-      secure: hBGLyDmzx4MC7j2aKfX0kmrwq7l00scvMFKdDWet31bjFHo/88jLHggxCuSusYPffTmoudG3ZiONdPib+0pdRGa+QmeqBrQCmpF+jBPzrfQyYk+hc1pOmTvcZyORjPzP16F1Su8Tu5eKBhbkLxo2CvYG3wXeHwu1MCtNFlvNL2PUHcKgtFbG7Ysx1e3OYifjLwMZUt/fian/gf5snmX2czYxxgyoSfEfxxRIagghjFTfTE3GGom2od0eiSeENWS7iH/51Na8VZJEpwz8CpI1246ZNMceE6+CPp4Jigb6d991MwI5I39oyl9vOUYXHbdbkJg704VXZ0ALW6/Be7wqL+l1ODdzKCG/z3r/PhTSD00S7PTuj8NcBHsr7O5HW1T78XGTU+7roXEp2Z6HsPfTjpCau95O2xgLEHzRWoXm8wjHc1QEmAAR8KQe4CEHKLsq/ZIhyLVxjt1Rpgg8AsdOofZ/Ai+ZIRE2bMekE42cGR851hSbQPJ55UELYiz806M/b4Eurd7ApCKzRPiBmx+yCl33p/+hSxGqLyM2ni44Zmpgfy5AZF4QlCVTSgvGlZOzNH7qF+0ZxFRt+9ke4X9W5Gwc99zix0HKv2ZCpK3COrY7yCVljB+cZ8ZEo5wnve+C1jGEvQPRn4ILmEfwpDacPvOcS7wZLdlP8CqISVSwd30=
+      secure: eXNLzng3X1DpVDF6nBPpCOWi4Naq+B63m0EaZOn8I3rpNrdJe1QGBp8PZE2kUNDdDCE5X2SSrEteFOhGc6mhKRLWo/zxsg4+vKXGkStQIekeVZYf4+eepggrny7aVxxCZXib1m4kK20z/e03M8HHwRlKTt52rNNr88ucCkkNp+xhD0FcHVZ1AYSz/ft0p0B8/Dzeaps7vKMGk2C1AON2jUpd499g/rLRoZgz6zVwjHvRXv03pXSldhRVys4cLtf4pSNdbPs3FfhDTFZgAo8tIDK5BnPRdKGt4Tsn1NyqP26jNsACiI4UsdEOUfY9AT2Y0r4BiO1bvym0xOp/unut6wyPObfNiMDQERk3ATISBvIuUtlCwN8gTv4V3iTe9QnBfMFS6mKAseG6Qp6Klp5YrokPhS8h1xAOzQcARxe00aZ3zeyDPkqMf9F/nzmQzcmGwd6Jk3JaB7lmNdEXW4c+pDcL4sGi9SYcohHQUcTxKLxDrFp+gvOjnQ87HbJh/StoHO13bZ+O/z0hxeMAiALTyxzEyUzqKsiDBVDR+6TUA8CCEkkeL3sFGAWpmB6xufF6x3joG/2WyO7hpzn/wa1+fgRHLeT3uU3kSM2YRq4jxnkNQ+uzm8vI+U/f/d22yORDynhcbPyyscrbr18Jn+iGZ6Njtf6ideJ0iwiQsWAjshw=
     on:
+      tags: true
       repo: mralexandernickel/ngx-picture
   - provider: pages
     skip-cleanup: true
