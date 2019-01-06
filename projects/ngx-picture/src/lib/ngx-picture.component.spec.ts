@@ -37,14 +37,9 @@ describe('PictureComponent', () => {
       component.currentImage$,
       'complete'
     );
-    const spyUnobserve: jasmine.Spy = spyOn(
-      component.intersectionObserverService,
-      'unobserveElement'
-    );
     component.ngOnDestroy();
     expect(spyDestroyed$).toHaveBeenCalled();
     expect(spyCurrentImage$).toHaveBeenCalled();
-    expect(spyUnobserve).toHaveBeenCalled();
   });
 
   it('should emit directly if preload is false', () => {

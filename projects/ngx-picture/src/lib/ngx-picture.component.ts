@@ -11,7 +11,6 @@ import {
 import { BehaviorSubject, Subject } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { BreakPoint, BREAKPOINTS } from '@angular/flex-layout';
-import { IntersectionObserverService } from './intersection-observer.service';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -40,7 +39,6 @@ export class NgxPictureComponent implements OnInit, OnDestroy {
   public destroyed$ = new Subject();
 
   constructor(
-    public intersectionObserverService: IntersectionObserverService,
     public elRef: ElementRef,
     public breakpointObserver: BreakpointObserver,
     public cr: ChangeDetectorRef,
@@ -93,21 +91,12 @@ export class NgxPictureComponent implements OnInit, OnDestroy {
     this.currentImage$.next(this.images[this.currentSize]);
   }
 
-  public observeElement(): void {
-    this.intersectionObserverService.observeElement(
-      this.elRef.nativeElement,
-      this.setImage.bind(this)
-    );
-  }
-
   public ngOnInit(): void {
     this.subscribeBreakpoints();
-    this.observeElement();
   }
 
   public ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.currentImage$.complete();
-    this.intersectionObserverService.unobserveElement(this.elRef.nativeElement);
   }
 }

@@ -2,4 +2,5 @@
   [src]="(currentImage$ | async).url"
   [attr.width]="(currentImage$ | async).width"
   alt="Item"
+  (libEnterViewport)="setImage()"
 >
