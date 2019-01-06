@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NgxPictureComponent } from './ngx-picture.component';
-import { createImages } from './images.mock';
+import { createImages } from './images.mock.spec';
 import { BREAKPOINTS, DEFAULT_BREAKPOINTS } from '@angular/flex-layout';
 
 describe('PictureComponent', () => {
@@ -24,6 +24,7 @@ describe('PictureComponent', () => {
     fixture = TestBed.createComponent(NgxPictureComponent);
     component = fixture.componentInstance;
     component.images = createImages(1)[0];
+    component.currentSize = 'sm';
     fixture.detectChanges();
   });
 
@@ -49,6 +50,51 @@ describe('PictureComponent', () => {
       'next'
     );
     component.setImage();
+    expect(spyCurrentImage$).toHaveBeenCalled();
+  });
+
+  it('should use Image.decode if available in browser', done => {
+    const spyCurrentImage$: jasmine.Spy = spyOn(
+      component.currentImage$,
+      'next'
+    );
+    const mockDecode = new Promise((resolve, reject) => {
+      resolve();
+      setTimeout(() => {
+        done();
+        expect(spyCurrentImage$).toHaveBeenCalled();
+      }, 100);
+    });
+    const spyImage: jasmine.Spy = spyOn(
+      Image.prototype,
+      'decode'
+    ).and.returnValue(mockDecode);
+  });
+
+  it('should set onload if Image.decode is not available in browser', () => {
+    const mockImage = {
+      onload: () => {}
+    };
+    const mockImageConstructor: any = () => {
+      return mockImage;
+    };
+    component.setImage(mockImageConstructor);
+    expect(mockImageConstructor).toBeDefined();
+  });
+
+  it('should call currentImage$.next onload', () => {
+    const mockImage = {
+      onload: () => {}
+    };
+    const mockImageConstructor: any = () => {
+      return mockImage;
+    };
+    component.setImage(mockImageConstructor);
+    const spyCurrentImage$: jasmine.Spy = spyOn(
+      component.currentImage$,
+      'next'
+    );
+    mockImage.onload();
     expect(spyCurrentImage$).toHaveBeenCalled();
   });
 });

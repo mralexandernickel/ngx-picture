@@ -64,10 +64,14 @@ export class NgxPictureComponent implements OnInit, OnDestroy {
     }
   }
 
-  public setImage(): void {
+  /**
+   *
+   * @param imageConstructor a constructor to be able to unit-test old browsers
+   */
+  public setImage(imageConstructor: any = Image): void {
     // If this.preload is true
     if (this.preload) {
-      const img = new Image();
+      const img = new imageConstructor();
       img.src = this.images[this.currentSize].url;
 
       // If browser supports Image.decode
