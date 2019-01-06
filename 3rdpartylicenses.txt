@@ -274,6 +274,8 @@ MIT
 @angular/common
 MIT
 
+@mralexandernickel/angular-intersection
+
 @angular/cdk
 MIT
 The MIT License
