@@ -65,10 +65,16 @@ describe('PictureComponent', () => {
         expect(spyCurrentImage$).toHaveBeenCalled();
       }, 100);
     });
-    const spyImage: jasmine.Spy = spyOn(
-      Image.prototype,
-      'decode'
-    ).and.returnValue(mockDecode);
+    const mockImage = {
+      onload: () => {},
+      decode: () => {
+        return mockDecode;
+      }
+    };
+    const mockImageConstructor: any = () => {
+      return mockImage;
+    };
+    component.setImage(mockImageConstructor);
   });
 
   it('should set onload if Image.decode is not available in browser', () => {
