@@ -8,7 +8,7 @@ import { createImages } from '@mralexandernickel/ngx-picture';
 })
 export class AppComponent implements OnInit {
   title = 'angular-lazyload';
-  public items: any[] = createImages(1);
+  public items: any[] = createImages(40);
 
   public ngOnInit(): void {}
 }
