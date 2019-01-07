@@ -103,4 +103,15 @@ describe('PictureComponent', () => {
     mockImage.onload();
     expect(spyCurrentImage$).toHaveBeenCalled();
   });
+
+  it('should not subscriobe breakpoints if src is a string', () => {
+    component.images =
+      'https://angular.io/generated/images/marketing/concept-icons/augury.svg';
+    const spySubscribeBreakpoints: jasmine.Spy = spyOn(
+      component,
+      'subscribeBreakpoints'
+    );
+    component.ngOnInit();
+    expect(spySubscribeBreakpoints).not.toHaveBeenCalled();
+  });
 });

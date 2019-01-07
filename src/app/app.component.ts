@@ -9,6 +9,9 @@ import { createImages } from '@mralexandernickel/ngx-picture';
 export class AppComponent implements OnInit {
   title = 'angular-lazyload';
   public items: any[] = createImages(1);
+  // public items = [
+  //   'https://angular.io/generated/images/marketing/concept-icons/augury.svg'
+  // ];
 
   public ngOnInit(): void {}
 }

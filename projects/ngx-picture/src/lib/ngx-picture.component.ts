@@ -49,6 +49,20 @@ export class NgxPictureComponent implements OnInit, OnDestroy {
     return this.breakpoints.find(breakpoint => breakpoint.alias === alias);
   }
 
+  public isSingleSrc(): boolean {
+    return this.images.constructor === String;
+  }
+
+  public getCurrentImage(): any {
+    if (this.isSingleSrc()) {
+      return {
+        url: this.images
+      };
+    } else {
+      return this.images[this.currentSize];
+    }
+  }
+
   public subscribeBreakpoints(): void {
     for (const size of Object.keys(this.images)) {
       this.breakpointObserver
@@ -72,12 +86,12 @@ export class NgxPictureComponent implements OnInit, OnDestroy {
     // If this.preload is true
     if (this.preload) {
       const img = new imageConstructor();
-      img.src = this.images[this.currentSize].url;
+      img.src = this.getCurrentImage().url;
 
       // If browser supports Image.decode
       if (img.decode) {
         img.decode().then(() => {
-          this.currentImage$.next(this.images[this.currentSize]);
+          this.currentImage$.next(this.getCurrentImage());
         });
 
         return;
@@ -85,18 +99,20 @@ export class NgxPictureComponent implements OnInit, OnDestroy {
 
       // Browser doesn't support Image.decode, fall back to regular onload
       (img as HTMLImageElement).onload = (e: Event) => {
-        this.currentImage$.next(this.images[this.currentSize]);
+        this.currentImage$.next(this.getCurrentImage());
       };
 
       return;
     }
 
     // If this.preload is false, emit directly
-    this.currentImage$.next(this.images[this.currentSize]);
+    this.currentImage$.next(this.getCurrentImage());
   }
 
   public ngOnInit(): void {
-    this.subscribeBreakpoints();
+    if (!this.isSingleSrc()) {
+      this.subscribeBreakpoints();
+    }
   }
 
   public ngOnDestroy(): void {
