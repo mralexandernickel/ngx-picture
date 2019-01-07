@@ -3,6 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxPictureComponent } from './ngx-picture.component';
 import { createImages } from './images.mock.spec';
 import { BREAKPOINTS, DEFAULT_BREAKPOINTS } from '@angular/flex-layout';
+import { AngularIntersectionModule } from '@mralexandernickel/angular-intersection';
+import { SimpleChanges, SimpleChange } from '@angular/core';
 
 describe('PictureComponent', () => {
   let component: NgxPictureComponent;
@@ -10,6 +12,7 @@ describe('PictureComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [AngularIntersectionModule],
       declarations: [NgxPictureComponent],
       providers: [
         {
@@ -104,7 +107,7 @@ describe('PictureComponent', () => {
     expect(spyCurrentImage$).toHaveBeenCalled();
   });
 
-  it('should not subscriobe breakpoints if src is a string', () => {
+  it('should not subscribe breakpoints if src is a string', () => {
     component.images =
       'https://angular.io/generated/images/marketing/concept-icons/augury.svg';
     const spySubscribeBreakpoints: jasmine.Spy = spyOn(
@@ -113,5 +116,33 @@ describe('PictureComponent', () => {
     );
     component.ngOnInit();
     expect(spySubscribeBreakpoints).not.toHaveBeenCalled();
+  });
+
+  it('should return an object with url-key if src is a string', () => {
+    component.images =
+      'https://angular.io/generated/images/marketing/concept-icons/augury.svg';
+    const result = component.getCurrentImage();
+    expect(result.constructor).toBe(Object);
+    expect(result.url).toBe(component.images);
+  });
+
+  it('should call observeRestart if its not the first change', () => {
+    const change = new SimpleChange('', '', false);
+    const spyObserveRestart: jasmine.Spy = spyOn(
+      component.libEnterViewport,
+      'observeRestart'
+    );
+    component.ngOnChanges({ images: change });
+    expect(spyObserveRestart).toHaveBeenCalled();
+  });
+
+  it('should do nothing if its the first change', () => {
+    const change = new SimpleChange('', '', true);
+    const spyObserveRestart: jasmine.Spy = spyOn(
+      component.libEnterViewport,
+      'observeRestart'
+    );
+    component.ngOnChanges({ images: change });
+    expect(spyObserveRestart).not.toHaveBeenCalled();
   });
 });

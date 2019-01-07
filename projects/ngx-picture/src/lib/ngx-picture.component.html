@@ -1,6 +1,9 @@
 <img
-  [src]="(currentImage$ | async).url"
-  [attr.width]="(currentImage$ | async).width"
-  alt="Item"
+  *ngIf="currentImage$ | async as currentImage"
+  [src]="currentImage.url"
+  [attr.width]="currentImage.width"
+  [attr.height]="currentImage.height"
+  [attr.alt]="currentImage.alt"
   (libEnterViewport)="setImage()"
+  #libEnterViewport="libEnterViewport"
 >
