@@ -1,6 +1,23 @@
-const IMAGES = ['components', 'augury', 'animations', 'cli', 'compiler'];
+const placeimgCategories = ['animals', 'arch', 'nature', 'people', 'tech'];
+const svgImages = ['components', 'augury', 'animations', 'cli', 'compiler'];
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'];
 const widths = [200, 300, 400, 500, 600];
+
+export function generateSvgUrl(image: string): string {
+  return `https://angular.io/generated/images/marketing/concept-icons/${image}.svg`;
+}
+
+export function generatePlaceimgUrl(
+  width: number,
+  height: number,
+  category: string
+): string {
+  return `https://placeimg.com/${width}/${height}/${category}`;
+}
+
+export function calculateHeight(width: number, ratio: string = '4:3'): number {
+  return Math.round(width * 0.75);
+}
 
 export function createImages(numImages: number = 20): any[] {
   const images = [];
@@ -10,11 +27,21 @@ export function createImages(numImages: number = 20): any[] {
 
     for (let index = 0; index < sizes.length; index++) {
       const size = sizes[index];
+      const width = widths[index];
+      const placeimgCategory = placeimgCategories[index];
+      const svgImage = svgImages[index];
       data[size] = {
-        url: `https://angular.io/generated/images/marketing/concept-icons/${
-          IMAGES[index]
-        }.svg`,
-        width: widths[index]
+        hiRes: {
+          src: generatePlaceimgUrl(
+            width,
+            calculateHeight(width),
+            placeimgCategory
+          )
+        },
+        lowRes: {
+          src: generateSvgUrl(svgImage),
+          width: width
+        }
       };
     }
     images.push(data);

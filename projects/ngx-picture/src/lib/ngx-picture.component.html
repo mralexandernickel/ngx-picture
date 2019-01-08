@@ -1,6 +1,6 @@
 <img
   *ngIf="currentImage$ | async as currentImage"
-  [src]="currentImage.url"
+  [src]="currentImage.src"
   [attr.width]="currentImage.width"
   [attr.height]="currentImage.height"
   [attr.alt]="currentImage.alt"

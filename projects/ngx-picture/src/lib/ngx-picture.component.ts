@@ -18,6 +18,9 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { BreakPoint, BREAKPOINTS } from '@angular/flex-layout';
 import { takeUntil } from 'rxjs/operators';
 import { EnterViewportDirective } from '@mralexandernickel/angular-intersection';
+import { FALLBACK_IMAGE } from './ngx-fallback-image.token';
+import { INgxImage } from './typings';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'lib-ngx-picture',
@@ -37,28 +40,29 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('libEnterViewport')
   public libEnterViewport: EnterViewportDirective;
 
-  private fallbackImage = {
-    url:
-      'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
-    width: 1
-  };
+  @Input() public fallbackImage: INgxImage;
 
-  public currentImage$: BehaviorSubject<any> = new BehaviorSubject<any>(
-    this.fallbackImage
-  );
+  public currentImage$: BehaviorSubject<any>;
 
   public currentSize: string;
 
   public destroyed$ = new Subject();
 
-  public imageAlreadyLoaded = false;
+  public hiResLoaded = false;
 
   constructor(
     public elRef: ElementRef,
     public breakpointObserver: BreakpointObserver,
     public cr: ChangeDetectorRef,
-    @Inject(BREAKPOINTS) public breakpoints: BreakPoint[]
-  ) {}
+    @Inject(BREAKPOINTS)
+    public breakpoints: BreakPoint[],
+    public sanitizer: DomSanitizer,
+    @Inject(FALLBACK_IMAGE) fallbackImage: string
+  ) {
+    this.fallbackImage = {
+      src: this.sanitizer.bypassSecurityTrustUrl(fallbackImage)
+    };
+  }
 
   public getBreakpoint(alias: string): BreakPoint {
     return this.breakpoints.find(breakpoint => breakpoint.alias === alias);
@@ -72,7 +76,12 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
   public getCurrentImage(): any {
     if (this.isSingleSrc()) {
       return {
-        url: this.images
+        hiRes: {
+          src: this.images
+        },
+        lowRes: {
+          src: this.images
+        }
       };
     } else {
       return this.images[this.currentSize];
@@ -94,27 +103,30 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  public emitImageLoaded(): void {
-    this.imageAlreadyLoaded = true;
+  public emitImage(currentImage: any, isHiRes: boolean): void {
+    if (!this.hiResLoaded) {
+      this.currentImage$.next(currentImage);
+    }
+    if (isHiRes) {
+      this.hiResLoaded = true;
+    }
     this.imageLoaded.emit(true);
   }
 
-  /**
-   *
-   * @param imageConstructor a constructor to be able to unit-test old browsers
-   */
-  public setImage(imageConstructor: any = Image): void {
-    this.imageAlreadyLoaded = false;
+  public loadImage(
+    currentImage: any,
+    imageConstructor: any = Image,
+    isHiRes: boolean
+  ): void {
     // If this.preload is true
     if (this.preload) {
       const img = new imageConstructor();
-      img.src = this.getCurrentImage().url;
+      img.src = currentImage.src;
 
       // If browser supports Image.decode
       if (img.decode) {
         img.decode().then(() => {
-          this.currentImage$.next(this.getCurrentImage());
-          this.emitImageLoaded();
+          this.emitImage(currentImage, isHiRes);
         });
 
         return;
@@ -122,19 +134,52 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
 
       // Browser doesn't support Image.decode, fall back to regular onload
       (img as HTMLImageElement).onload = (e: Event) => {
-        this.currentImage$.next(this.getCurrentImage());
-        this.emitImageLoaded();
+        this.emitImage(currentImage, isHiRes);
       };
 
       return;
     }
 
     // If this.preload is false, emit directly
-    this.currentImage$.next(this.getCurrentImage());
-    this.emitImageLoaded();
+    this.emitImage(currentImage, isHiRes);
+  }
+
+  /**
+   *
+   * @param imageConstructor a constructor to be able to unit-test old browsers
+   */
+  public setImage(imageConstructor: any = Image): void {
+    const currentImage = this.getCurrentImage();
+    this.hiResLoaded = false;
+
+    // reset to fallbackImage during loading
+    // this.loadImage(this.fallbackImage, imageConstructor, false);
+    this.emitImage(this.fallbackImage, false);
+
+    // currentImage has only one src attribute (now lowRes/hiRes)
+    if (currentImage.src) {
+      this.loadImage(currentImage, imageConstructor, true);
+      return;
+    }
+
+    // currentImage has a low-resolution version
+    if (currentImage.lowRes) {
+      const isFinal = !currentImage.hiRes;
+      this.loadImage(currentImage.lowRes, imageConstructor, isFinal);
+      // stop if currentImage has no high-resolution version
+      if (isFinal) {
+        return;
+      }
+    }
+
+    // currentImage has a high-resolution version
+    if (currentImage.hiRes) {
+      this.loadImage(currentImage.hiRes, imageConstructor, true);
+    }
   }
 
   public ngOnInit(): void {
+    this.currentImage$ = new BehaviorSubject<any>(this.fallbackImage);
     if (!this.isSingleSrc()) {
       this.subscribeBreakpoints();
     }

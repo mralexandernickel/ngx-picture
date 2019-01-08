@@ -123,7 +123,7 @@ describe('PictureComponent', () => {
       'https://angular.io/generated/images/marketing/concept-icons/augury.svg';
     const result = component.getCurrentImage();
     expect(result.constructor).toBe(Object);
-    expect(result.url).toBe(component.images);
+    expect(result['hiRes'].src).toBe(component.images);
   });
 
   it('should call observeRestart if its not the first change', () => {
@@ -144,5 +144,65 @@ describe('PictureComponent', () => {
     );
     component.ngOnChanges({ images: change });
     expect(spyObserveRestart).not.toHaveBeenCalled();
+  });
+
+  it('should not call currentImage$.next if hiResloaded is true', () => {
+    component.hiResLoaded = true;
+    const spyCurrentImage$: jasmine.Spy = spyOn(
+      component.currentImage$,
+      'next'
+    );
+    component.emitImage({ src: '' }, false);
+    expect(spyCurrentImage$).not.toHaveBeenCalled();
+  });
+
+  it('Should call loadImage ONCE if image only has a src attribute', () => {
+    component.currentSize = 'md';
+    component.images = {
+      md: {
+        src: 'https://placeimg.com/300/225/arch'
+      }
+    };
+    const spyComponentLoadImage: jasmine.Spy = spyOn(component, 'loadImage');
+    component.setImage();
+    expect(spyComponentLoadImage).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should call loadImage ONCE if image only has a lowRes attribute', () => {
+    component.currentSize = 'md';
+    component.images = {
+      md: {
+        lowRes: {
+          src: 'https://placeimg.com/300/225/arch'
+        }
+      }
+    };
+    const spyComponentLoadImage: jasmine.Spy = spyOn(component, 'loadImage');
+    component.setImage();
+    expect(spyComponentLoadImage).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should call loadImage ONCE if image only has a highRes attribute', () => {
+    component.currentSize = 'md';
+    component.images = {
+      md: {
+        hiRes: {
+          src: 'https://placeimg.com/300/225/arch'
+        }
+      }
+    };
+    const spyComponentLoadImage: jasmine.Spy = spyOn(component, 'loadImage');
+    component.setImage();
+    expect(spyComponentLoadImage).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should never loadImage if image has no src, lowRes or hiRes attribute', () => {
+    component.currentSize = 'md';
+    component.images = {
+      md: {}
+    };
+    const spyComponentLoadImage: jasmine.Spy = spyOn(component, 'loadImage');
+    component.setImage();
+    expect(spyComponentLoadImage).not.toHaveBeenCalled();
   });
 });

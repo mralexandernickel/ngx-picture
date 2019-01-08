@@ -6,7 +6,6 @@ import { AngularIntersectionModule } from '@mralexandernickel/angular-intersecti
 @NgModule({
   imports: [CommonModule, AngularIntersectionModule],
   exports: [NgxPictureComponent, AngularIntersectionModule],
-  declarations: [NgxPictureComponent],
-  providers: []
+  declarations: [NgxPictureComponent]
 })
 export class NgxPictureModule {}

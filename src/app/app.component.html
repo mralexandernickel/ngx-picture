@@ -1,5 +1,8 @@
 <ul>
   <li *ngFor="let item of items">
-    <lib-ngx-picture [images]="item"></lib-ngx-picture>
+    <lib-ngx-picture
+      [images]="item"
+      [fallbackImage]="fallbackImage"
+    ></lib-ngx-picture>
   </li>
 </ul>
