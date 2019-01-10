@@ -4,11 +4,72 @@
 
 # Ngx Picture
 
-- Lazyloaded
-- IntersectionObserver (ONE!)
-- FlexLayout Breakpoints (even custom ones)
-- Image.decode
-- ChangeDetectionStrategy.OnPush
+## What is this?
+
+Since in almost every project I am working on, there are the same
+requirements/wishes for showing Images, I decided to develop exactly that and
+pack as a angular-component.
+
+These requirements are:
+
+### Lazyloading
+
+Load the images only if they are needed. In fact nothing new here, but almost
+any solution I came across is using one IntersectionObserver per Image.
+I want to use One IntersectionObserver for ALL Images
+
+### Preloading
+
+The Images should be preloaded before injecting them into the DOM.
+
+### Decoding
+
+In Browsers that support `new Image().decode()` it should be used, as this is
+massively reducing the load on the main-thread.
+
+### Src-Sets
+
+I want to be able to switch Images depending on the current screensize.
+Of coursethe first thought is to use the shiny `<picture>` element, but because
+its not possible to get notified about changes of `currentSrc` BEFORE the image
+is injected into the DOM (and therefore it's not possible to preload or decode)
+this dies not meet the requirements.
+Because my layouts are responsive anyways, and in every project I make use of
+FlexLayoutModule, the points to switch Images should match the breakpoints
+in FlexLayoutMoule.
+
+### ChangeDetectionStrategy
+
+For performance reasons I want to use `ChangeDetectionStrategy.OnPush`
+
+## How to install?
+
+You can install with yarn, npm or ng
+
+```bash
+yarn add @mralexandernickel/ngx-picture
+```
+
+```bash
+npm install @mralexandernickel/ngx-picture
+```
+
+```bash
+ng add @mralexandernickel/ngx-picture
+```
+
+## How to use?
+
+```html
+<lib-ngx-picture
+  [images]="item"
+  [fallbackImage]="fallbackImage"
+></lib-ngx-picture>
+```
+
+The Images property/input has to be of type `INgxPictureSet | string`.
+
+(..to be continued...)
 
 ## Demo
 
