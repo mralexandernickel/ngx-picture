@@ -19,7 +19,7 @@ import { BreakPoint, BREAKPOINTS } from '@angular/flex-layout';
 import { takeUntil } from 'rxjs/operators';
 import { EnterViewportDirective } from '@mralexandernickel/angular-intersection';
 import { FALLBACK_IMAGE } from './ngx-fallback-image.token';
-import { INgxImage } from './typings';
+import { INgxImage, INgxImageSet, INgxPictureSet } from './typings';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -29,7 +29,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() public images: any;
+  @Input() public images: INgxPictureSet | string;
 
   @Input() public preload = true;
 
@@ -42,7 +42,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() public fallbackImage: INgxImage;
 
-  public currentImage$: BehaviorSubject<any>;
+  public currentImage$: BehaviorSubject<INgxImage>;
 
   public currentSize: string;
 
@@ -73,7 +73,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
     return this.images.constructor === String;
   }
 
-  public getCurrentImage(): any {
+  public getCurrentImage(): INgxImage | INgxImageSet {
     if (this.isSingleSrc()) {
       return {
         hiRes: {
@@ -103,7 +103,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  public emitImage(currentImage: any, isHiRes: boolean): void {
+  public emitImage(currentImage: INgxImage, isHiRes: boolean): void {
     if (!this.hiResLoaded) {
       this.currentImage$.next(currentImage);
     }
@@ -114,7 +114,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public loadImage(
-    currentImage: any,
+    currentImage: INgxImage,
     imageConstructor: any = Image,
     isHiRes: boolean
   ): void {
@@ -133,7 +133,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
       }
 
       // Browser doesn't support Image.decode, fall back to regular onload
-      (img as HTMLImageElement).onload = (e: Event) => {
+      img.onload = (e: Event) => {
         this.emitImage(currentImage, isHiRes);
       };
 
@@ -157,7 +157,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
     this.emitImage(this.fallbackImage, false);
 
     // currentImage has only one src attribute (now lowRes/hiRes)
-    if (currentImage.src) {
+    if ('src' in currentImage) {
       this.loadImage(currentImage, imageConstructor, true);
       return;
     }
@@ -179,7 +179,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public ngOnInit(): void {
-    this.currentImage$ = new BehaviorSubject<any>(this.fallbackImage);
+    this.currentImage$ = new BehaviorSubject<INgxImage>(this.fallbackImage);
     if (!this.isSingleSrc()) {
       this.subscribeBreakpoints();
     }
