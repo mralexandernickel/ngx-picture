@@ -16,3 +16,7 @@ export interface INgxImageSet {
 export interface INgxPictureSet {
   [s: string]: INgxImage | INgxImageSet;
 }
+
+export interface INgxCacheMap {
+  [s: string]: boolean;
+}

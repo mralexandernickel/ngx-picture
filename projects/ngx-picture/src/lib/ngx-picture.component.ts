@@ -21,6 +21,7 @@ import { EnterViewportDirective } from '@mralexandernickel/angular-intersection'
 import { FALLBACK_IMAGE } from './ngx-fallback-image.token';
 import { INgxImage, INgxImageSet, INgxPictureSet } from './typings';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NgxPictureCacheService } from './ngx-picture-cache.service';
 
 @Component({
   selector: 'lib-ngx-picture',
@@ -57,7 +58,8 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
     @Inject(BREAKPOINTS)
     public breakpoints: BreakPoint[],
     public sanitizer: DomSanitizer,
-    @Inject(FALLBACK_IMAGE) fallbackImage: string
+    @Inject(FALLBACK_IMAGE) fallbackImage: string,
+    public cacheService: NgxPictureCacheService
   ) {
     this.fallbackImage = {
       src: this.sanitizer.bypassSecurityTrustUrl(fallbackImage)
@@ -104,6 +106,9 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public emitImage(currentImage: INgxImage, isHiRes: boolean): void {
+    if (typeof currentImage.src === 'string') {
+      this.cacheService.set(currentImage.src);
+    }
     if (!this.hiResLoaded) {
       this.currentImage$.next(currentImage);
     }
@@ -151,6 +156,36 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
   public setImage(imageConstructor: any = Image): void {
     const currentImage = this.getCurrentImage();
     this.hiResLoaded = false;
+
+    // If hiRes is already cached -> emit and return
+    if (
+      'hiRes' in currentImage &&
+      typeof currentImage.hiRes.src === 'string' &&
+      this.cacheService.get(currentImage.hiRes.src)
+    ) {
+      this.emitImage(currentImage.hiRes, true);
+      return;
+    }
+
+    // If lowRes is already cached -> emit and return
+    if (
+      'lowRes' in currentImage &&
+      typeof currentImage.lowRes.src === 'string' &&
+      this.cacheService.get(currentImage.lowRes.src)
+    ) {
+      this.emitImage(currentImage.lowRes, true);
+      return;
+    }
+
+    // If src is already cached -> emit and return
+    if (
+      'src' in currentImage &&
+      typeof currentImage.src === 'string' &&
+      this.cacheService.get(currentImage.src)
+    ) {
+      this.emitImage(currentImage, true);
+      return;
+    }
 
     // reset to fallbackImage during loading
     // this.loadImage(this.fallbackImage, imageConstructor, false);

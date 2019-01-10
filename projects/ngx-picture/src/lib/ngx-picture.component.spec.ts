@@ -205,4 +205,38 @@ describe('PictureComponent', () => {
     component.setImage();
     expect(spyComponentLoadImage).not.toHaveBeenCalled();
   });
+
+  it('should emit directly if lowRes.src is already cached', () => {
+    component.currentSize = 'md';
+    component.images = {
+      md: {
+        lowRes: {
+          src: 'https://placeimg.com/300/225/arch'
+        }
+      }
+    };
+    const spyCacheServiceGet: jasmine.Spy = spyOn(
+      component.cacheService,
+      'get'
+    ).and.returnValue(true);
+    const spyComponentEmitImage: jasmine.Spy = spyOn(component, 'emitImage');
+    component.setImage();
+    expect(spyComponentEmitImage).toHaveBeenCalledTimes(1);
+  });
+
+  it('should emit directly if src is already cached', () => {
+    component.currentSize = 'md';
+    component.images = {
+      md: {
+        src: 'https://placeimg.com/300/225/arch'
+      }
+    };
+    const spyCacheServiceGet: jasmine.Spy = spyOn(
+      component.cacheService,
+      'get'
+    ).and.returnValue(true);
+    const spyComponentEmitImage: jasmine.Spy = spyOn(component, 'emitImage');
+    component.setImage();
+    expect(spyComponentEmitImage).toHaveBeenCalledTimes(1);
+  });
 });
