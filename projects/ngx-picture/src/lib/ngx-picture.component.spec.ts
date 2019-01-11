@@ -114,7 +114,7 @@ describe('PictureComponent', () => {
       component,
       'subscribeBreakpoints'
     );
-    component.ngOnInit();
+    component.ngAfterViewInit();
     expect(spySubscribeBreakpoints).not.toHaveBeenCalled();
   });
 
@@ -238,5 +238,14 @@ describe('PictureComponent', () => {
     const spyComponentEmitImage: jasmine.Spy = spyOn(component, 'emitImage');
     component.setImage();
     expect(spyComponentEmitImage).toHaveBeenCalledTimes(1);
+  });
+
+  it('should set preload to false if platform is not browser', () => {
+    const spyObserveIsBrowser: jasmine.Spy = spyOn(
+      component.libEnterViewport,
+      'isBrowser'
+    ).and.returnValue(false);
+    component.ngAfterViewInit();
+    expect(component.preload).toBe(false);
   });
 });

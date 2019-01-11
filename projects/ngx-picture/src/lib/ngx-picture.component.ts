@@ -11,7 +11,8 @@ import {
   EventEmitter,
   ViewChild,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  AfterViewInit
 } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -22,6 +23,7 @@ import { FALLBACK_IMAGE } from './ngx-fallback-image.token';
 import { INgxImage, INgxImageSet, INgxPictureSet } from './typings';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxPictureCacheService } from './ngx-picture-cache.service';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'lib-ngx-picture',
@@ -29,7 +31,8 @@ import { NgxPictureCacheService } from './ngx-picture-cache.service';
   styleUrls: ['./ngx-picture.component.styl'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
+export class NgxPictureComponent
+  implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   @Input() public images: INgxPictureSet | string;
 
   @Input() public preload = true;
@@ -120,7 +123,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
 
   public loadImage(
     currentImage: INgxImage,
-    imageConstructor: any = Image,
+    imageConstructor: any,
     isHiRes: boolean
   ): void {
     // If this.preload is true
@@ -213,11 +216,19 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  public ngOnInit(): void {
-    this.currentImage$ = new BehaviorSubject<INgxImage>(this.fallbackImage);
+  public ngAfterViewInit(): void {
+    if (!this.libEnterViewport.isBrowser()) {
+      this.preload = false;
+      return;
+    }
+
     if (!this.isSingleSrc()) {
       this.subscribeBreakpoints();
     }
+  }
+
+  public ngOnInit(): void {
+    this.currentImage$ = new BehaviorSubject<INgxImage>(this.fallbackImage);
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
