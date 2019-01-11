@@ -1,6 +1,6 @@
 {
   "name": "@mralexandernickel/ngx-picture",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "publishConfig": {
     "access": "public"
   },
@@ -9,6 +9,6 @@
     "@angular/core": "^7.1.0",
     "@angular/cdk": "^7.2.0",
     "@angular/flex-layout": "^7.0.0-beta.22",
-    "@mralexandernickel/angular-intersection": "^0.2.0"
+    "@mralexandernickel/angular-intersection": "^0.3.0"
   }
 }
