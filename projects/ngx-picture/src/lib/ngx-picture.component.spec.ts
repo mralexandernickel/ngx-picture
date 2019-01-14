@@ -114,7 +114,7 @@ describe('PictureComponent', () => {
       component,
       'subscribeBreakpoints'
     );
-    component.ngAfterViewInit();
+    component.ngOnInit();
     expect(spySubscribeBreakpoints).not.toHaveBeenCalled();
   });
 
@@ -242,10 +242,42 @@ describe('PictureComponent', () => {
 
   it('should set preload to false if platform is not browser', () => {
     const spyObserveIsBrowser: jasmine.Spy = spyOn(
-      component.libEnterViewport,
+      component,
       'isBrowser'
     ).and.returnValue(false);
-    component.ngAfterViewInit();
+    component.setDefaultsForServerSide();
     expect(component.preload).toBe(false);
+  });
+
+  it('should set the largest available image to intialImage on server-side', () => {
+    const imageSet = {
+      lg: {
+        hiRes: {
+          src: 'https://placeimg.com/300/225/arch'
+        }
+      }
+    };
+    component.currentSize = 'lg';
+    component.images = imageSet;
+    const spyObserveIsBrowser: jasmine.Spy = spyOn(
+      component,
+      'isBrowser'
+    ).and.returnValue(false);
+    spyOn(component, 'subscribeBreakpoints').and.returnValue(false);
+    const intialImage = component.ngOnInit();
+    expect(intialImage).toEqual(imageSet.lg.hiRes);
+  });
+
+  it('should leave the fallbackImage as initialImage if there is not images set', () => {
+    spyOn(component, 'isBrowser').and.returnValue(false);
+    spyOn(component, 'subscribeBreakpoints').and.returnValue(false);
+    component.currentSize = 'md';
+    component.images = {
+      md: {
+        src: 'https://placeimg.com/300/225/arch'
+      }
+    };
+    const initialImage = component.ngOnInit();
+    expect(initialImage).toEqual(component.fallbackImage);
   });
 });

@@ -12,7 +12,7 @@ import {
   ViewChild,
   OnChanges,
   SimpleChanges,
-  AfterViewInit
+  PLATFORM_ID
 } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -31,8 +31,7 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./ngx-picture.component.styl'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NgxPictureComponent
-  implements OnInit, OnDestroy, OnChanges, AfterViewInit {
+export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
   @Input() public images: INgxPictureSet | string;
 
   @Input() public preload = true;
@@ -62,11 +61,20 @@ export class NgxPictureComponent
     public breakpoints: BreakPoint[],
     public sanitizer: DomSanitizer,
     @Inject(FALLBACK_IMAGE) fallbackImage: string,
+    @Inject(PLATFORM_ID) public platformId: string,
     public cacheService: NgxPictureCacheService
   ) {
+    this.setDefaultsForServerSide();
     this.fallbackImage = {
       src: this.sanitizer.bypassSecurityTrustUrl(fallbackImage)
     };
+  }
+
+  public setDefaultsForServerSide(): void {
+    if (!this.isBrowser()) {
+      this.preload = false;
+      this.currentSize = 'lg';
+    }
   }
 
   public getBreakpoint(alias: string): BreakPoint {
@@ -152,12 +160,20 @@ export class NgxPictureComponent
     this.emitImage(currentImage, isHiRes);
   }
 
+  public isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
+
   /**
    *
    * @param imageConstructor a constructor to be able to unit-test old browsers
    */
-  public setImage(imageConstructor: any = Image): void {
+  public setImage(imageConstructor?: any): void {
+    if (!imageConstructor && this.isBrowser()) {
+      imageConstructor = Image;
+    }
     const currentImage = this.getCurrentImage();
+    // console.log('### currentIMage', currentImage);
     this.hiResLoaded = false;
 
     // If hiRes is already cached -> emit and return
@@ -216,19 +232,23 @@ export class NgxPictureComponent
     }
   }
 
-  public ngAfterViewInit(): void {
-    if (!this.libEnterViewport.isBrowser()) {
-      this.preload = false;
-      return;
+  public ngOnInit(): INgxImage {
+    let initialImage = this.fallbackImage;
+    if (!this.isBrowser()) {
+      if (
+        this.images[this.currentSize] &&
+        this.images[this.currentSize].hiRes
+      ) {
+        initialImage = this.images[this.currentSize].hiRes;
+      }
+    } else {
+      if (!this.isSingleSrc()) {
+        this.subscribeBreakpoints();
+      }
     }
+    this.currentImage$ = new BehaviorSubject<INgxImage>(initialImage);
 
-    if (!this.isSingleSrc()) {
-      this.subscribeBreakpoints();
-    }
-  }
-
-  public ngOnInit(): void {
-    this.currentImage$ = new BehaviorSubject<INgxImage>(this.fallbackImage);
+    return initialImage;
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
