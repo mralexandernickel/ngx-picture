@@ -266,10 +266,10 @@ Apache-2.0
 @angular/core
 MIT
 
-@mralexandernickel/ngx-picture
-
 @angular/common
 MIT
+
+@mralexandernickel/ngx-picture
 
 @mralexandernickel/angular-intersection
 
