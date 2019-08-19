@@ -145,9 +145,12 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
 
       // If browser supports Image.decode
       if (img.decode && !isDataUri(img)) {
-        img.decode().then(() => {
-          this.emitImage(currentImage, isHiRes);
-        });
+        img
+          .decode()
+          .then(() => {
+            this.emitImage(currentImage, isHiRes);
+          })
+          .catch();
 
         return;
       }
