@@ -25,6 +25,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NgxPictureCacheService } from './ngx-picture-cache.service';
 import { isPlatformBrowser } from '@angular/common';
 
+export function isDataUri(img: HTMLImageElement): boolean {
+  return img.src.slice(0, 5) === 'data:';
+}
+
 @Component({
   selector: 'lib-ngx-picture',
   templateUrl: './ngx-picture.component.html',
@@ -140,7 +144,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
       img.src = currentImage.src;
 
       // If browser supports Image.decode
-      if (img.decode) {
+      if (img.decode && !isDataUri(img)) {
         img.decode().then(() => {
           this.emitImage(currentImage, isHiRes);
         });
