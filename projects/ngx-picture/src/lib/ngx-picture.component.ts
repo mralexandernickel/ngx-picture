@@ -150,7 +150,9 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
           .then(() => {
             this.emitImage(currentImage, isHiRes);
           })
-          .catch();
+          .catch((err: DOMException) => {
+            console.log(err.message);
+          });
 
         return;
       }
