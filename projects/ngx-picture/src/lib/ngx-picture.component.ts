@@ -44,7 +44,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
     boolean
   >();
 
-  @ViewChild('libEnterViewport')
+  @ViewChild('libEnterViewport', { static: true })
   public libEnterViewport: EnterViewportDirective;
 
   @Input() public fallbackImage: INgxImage;
