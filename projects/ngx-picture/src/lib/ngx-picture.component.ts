@@ -12,7 +12,8 @@ import {
   ViewChild,
   OnChanges,
   SimpleChanges,
-  PLATFORM_ID
+  PLATFORM_ID,
+  AfterViewInit
 } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -35,7 +36,8 @@ export function isDataUri(img: HTMLImageElement): boolean {
   styleUrls: ['./ngx-picture.component.styl'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
+export class NgxPictureComponent
+  implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   @Input() public images: INgxPictureSet | string;
 
   @Input() public preload = true;
@@ -44,7 +46,7 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
     boolean
   >();
 
-  @ViewChild('libEnterViewport')
+  @ViewChild('libEnterViewport', { static: false })
   public libEnterViewport: EnterViewportDirective;
 
   @Input() public fallbackImage: INgxImage;
@@ -241,6 +243,25 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  /**
+   * We need to run this code inside AfterViewInit, because in OnInit we
+   * are setting/emitting the currentImage$ which is used inside the *ngIf
+   * inside the template, which itself is adding the ViewChild reference.
+   *
+   * So if currentImage$ hasn't emitted, the element in the template is not
+   * rendered and since Angular 8 the ViewChild then is also not available.
+   *
+   * This would throw an error inside subscribeBreakpoints as it is relying on
+   * this.libEnterViewport.
+   */
+  public ngAfterViewInit(): void {
+    if (this.isBrowser()) {
+      if (!this.isSingleSrc()) {
+        this.subscribeBreakpoints();
+      }
+    }
+  }
+
   public ngOnInit(): INgxImage {
     let initialImage = this.fallbackImage;
     if (!this.isBrowser()) {
@@ -249,10 +270,6 @@ export class NgxPictureComponent implements OnInit, OnDestroy, OnChanges {
         this.images[this.currentSize].hiRes
       ) {
         initialImage = this.images[this.currentSize].hiRes;
-      }
-    } else {
-      if (!this.isSingleSrc()) {
-        this.subscribeBreakpoints();
       }
     }
     this.currentImage$ = new BehaviorSubject<INgxImage>(initialImage);
