@@ -114,7 +114,7 @@ describe('PictureComponent', () => {
       component,
       'subscribeBreakpoints'
     );
-    component.ngOnInit();
+    component.ngAfterViewInit();
     expect(spySubscribeBreakpoints).not.toHaveBeenCalled();
   });
 
@@ -279,5 +279,18 @@ describe('PictureComponent', () => {
     };
     const initialImage = component.ngOnInit();
     expect(initialImage).toEqual(component.fallbackImage);
+  });
+
+  it('should do nothing if platform is not a browser', () => {
+    const spyObserveIsBrowser: jasmine.Spy = spyOn(
+      component,
+      'isBrowser'
+    ).and.returnValue(false);
+    const subscribeBreakpointsSpy: jasmine.Spy = spyOn(
+      component,
+      'subscribeBreakpoints'
+    );
+    component.ngAfterViewInit();
+    expect(subscribeBreakpointsSpy).not.toHaveBeenCalled();
   });
 });
