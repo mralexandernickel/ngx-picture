@@ -955,10 +955,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@mralexandernickel/angular-intersection@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@mralexandernickel/angular-intersection/-/angular-intersection-0.3.0.tgz#52b7c896edcc4e566dcc7329c54e126be0e335c0"
-  integrity sha512-3egCLpQNQOtNLG4YUqQsn5DCKvYWVqCOrM1lJJbNHC3VBb6iXGO1p/DrgWK00aSqI2BiwRm+HCQWgu/cMiRYKw==
+"@mralexandernickel/ngx-intersection@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@mralexandernickel/ngx-intersection/-/ngx-intersection-0.9.0.tgz#f75a1bc7754e6cfdc577a19497193e319c474374"
+  integrity sha512-4Ci3xkLCXm/HqXMXP49ImhzTpd8XuOiYLZunPMWdH/p3aRYn7XBAaMuGVMW8UB/s27CBY/+LrdeJpc6ZTZSFJg==
   dependencies:
     tslib "^1.9.0"
 

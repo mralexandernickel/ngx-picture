@@ -19,7 +19,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { BreakPoint, BREAKPOINTS } from '@angular/flex-layout';
 import { takeUntil } from 'rxjs/operators';
-import { EnterViewportDirective } from '@mralexandernickel/angular-intersection';
+import { EnterViewportDirective } from '@mralexandernickel/ngx-intersection';
 import { FALLBACK_IMAGE } from './ngx-fallback-image.token';
 import { INgxImage, INgxImageSet, INgxPictureSet } from './typings';
 import { DomSanitizer } from '@angular/platform-browser';

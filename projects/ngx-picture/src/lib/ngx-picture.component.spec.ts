@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgxPictureComponent } from './ngx-picture.component';
 import { createImages } from './images.mock.spec';
 import { BREAKPOINTS, DEFAULT_BREAKPOINTS } from '@angular/flex-layout';
-import { AngularIntersectionModule } from '@mralexandernickel/angular-intersection';
+import { AngularIntersectionModule } from '@mralexandernickel/ngx-intersection';
 import { SimpleChanges, SimpleChange } from '@angular/core';
 
 describe('PictureComponent', () => {
