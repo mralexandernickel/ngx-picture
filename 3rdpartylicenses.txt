@@ -82,7 +82,7 @@ THE SOFTWARE.
 @angular/platform-browser
 MIT
 
-@mralexandernickel/angular-intersection
+@mralexandernickel/ngx-intersection
 
 @mralexandernickel/ngx-picture
 
