@@ -25,4 +25,14 @@ export class AppComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer) {}
 
   public ngOnInit(): void {}
+
+  public updateImages(): void {
+    for (let index = 0; index < this.items.length; index++) {
+      this.items[index] = createImages(1)[0];
+    }
+  }
+
+  public trackByFn(index: number, item: any): number {
+    return index;
+  }
 }

@@ -88,7 +88,6 @@ export class NgxPictureComponent
   }
 
   public isSingleSrc(): boolean {
-    // debugger;
     return this.images.constructor === String;
   }
 
@@ -184,7 +183,6 @@ export class NgxPictureComponent
       imageConstructor = Image;
     }
     const currentImage = this.getCurrentImage();
-    // console.log('### currentIMage', currentImage);
     this.hiResLoaded = false;
 
     // If hiRes is already cached -> emit and return
@@ -198,13 +196,15 @@ export class NgxPictureComponent
     }
 
     // If lowRes is already cached -> emit and return
+    let lowResAlreadyCached = false;
     if (
       'lowRes' in currentImage &&
       typeof currentImage.lowRes.src === 'string' &&
       this.cacheService.get(currentImage.lowRes.src)
     ) {
-      this.emitImage(currentImage.lowRes, true);
-      return;
+      lowResAlreadyCached = true;
+      const isFinal = !currentImage.hiRes;
+      this.emitImage(currentImage.lowRes, isFinal);
     }
 
     // If src is already cached -> emit and return
@@ -219,7 +219,9 @@ export class NgxPictureComponent
 
     // reset to fallbackImage during loading
     // this.loadImage(this.fallbackImage, imageConstructor, false);
-    this.emitImage(this.fallbackImage, false);
+    if (!lowResAlreadyCached) {
+      this.emitImage(this.fallbackImage, false);
+    }
 
     // currentImage has only one src attribute (now lowRes/hiRes)
     if ('src' in currentImage) {
@@ -228,7 +230,7 @@ export class NgxPictureComponent
     }
 
     // currentImage has a low-resolution version
-    if (currentImage.lowRes) {
+    if (currentImage.lowRes && !lowResAlreadyCached) {
       const isFinal = !currentImage.hiRes;
       this.loadImage(currentImage.lowRes, imageConstructor, isFinal);
       // stop if currentImage has no high-resolution version
@@ -264,6 +266,7 @@ export class NgxPictureComponent
 
   public ngOnInit(): INgxImage {
     let initialImage = this.fallbackImage;
+
     if (!this.isBrowser()) {
       if (
         this.images[this.currentSize] &&

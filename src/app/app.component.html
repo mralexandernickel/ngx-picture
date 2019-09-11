@@ -1,5 +1,7 @@
+<button (click)="updateImages()">Update Images</button>
+
 <ul>
-  <li *ngFor="let item of items">
+  <li *ngFor="let item of items; trackBy: trackByFn">
     <lib-ngx-picture
       [images]="item"
       [fallbackImage]="fallbackImage"

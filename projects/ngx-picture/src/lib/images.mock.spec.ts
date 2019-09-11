@@ -3,6 +3,10 @@ const svgImages = ['components', 'augury', 'animations', 'cli', 'compiler'];
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'];
 const widths = [200, 300, 400, 500, 600];
 
+export function getRandomArrayItem<T>(array: T[]): T {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 export function generateSvgUrl(image: string): string {
   return `https://angular.io/generated/images/marketing/concept-icons/${image}.svg`;
 }
@@ -28,7 +32,7 @@ export function createImages(numImages: number = 20): any[] {
     for (let index = 0; index < sizes.length; index++) {
       const size = sizes[index];
       const width = widths[index];
-      const placeimgCategory = placeimgCategories[index];
+      const placeimgCategory = getRandomArrayItem(placeimgCategories);
       const svgImage = svgImages[index];
       data[size] = {
         hiRes: {
