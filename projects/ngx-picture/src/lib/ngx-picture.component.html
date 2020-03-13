@@ -1,9 +1,9 @@
 <img
-  *ngIf="currentImage$ | async as currentImage"
+  *ngIf="currentImage$ | async as currentImage"
   [src]="currentImage.src"
   [attr.width]="currentImage.width"
   [attr.height]="currentImage.height"
   [attr.alt]="currentImage.alt"
-  (libEnterViewport)="setImage()"
-  #libEnterViewport="libEnterViewport"
->
+  (ngxIntersectionPresentStart)="setImage()"
+  #ngxIntersectionPresentStart="ngxIntersectionPresentStart"
+/>

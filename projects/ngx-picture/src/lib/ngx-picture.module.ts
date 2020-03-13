@@ -1,11 +1,22 @@
-import { NgModule } from '@angular/core';
-import { NgxPictureComponent } from './ngx-picture.component';
 import { CommonModule } from '@angular/common';
-import { AngularIntersectionModule } from '@mralexandernickel/ngx-intersection';
+import { NgModule } from '@angular/core';
+import {
+  AngularIntersectionModule,
+  IntersectionDirectivesModule
+} from '@mralexandernickel/ngx-intersection';
+import { NgxPictureComponent } from './ngx-picture.component';
 
 @NgModule({
-  imports: [CommonModule, AngularIntersectionModule],
-  exports: [NgxPictureComponent, AngularIntersectionModule],
+  imports: [
+    CommonModule,
+    AngularIntersectionModule,
+    IntersectionDirectivesModule
+  ],
+  exports: [
+    NgxPictureComponent,
+    AngularIntersectionModule,
+    IntersectionDirectivesModule
+  ],
   declarations: [NgxPictureComponent]
 })
 export class NgxPictureModule {}

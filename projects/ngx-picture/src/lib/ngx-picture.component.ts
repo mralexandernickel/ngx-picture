@@ -1,30 +1,30 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  ChangeDetectionStrategy,
-  ElementRef,
-  ChangeDetectorRef,
-  OnDestroy,
-  Inject,
-  Output,
-  EventEmitter,
-  ViewChild,
-  OnChanges,
-  SimpleChanges,
-  PLATFORM_ID,
-  AfterViewInit
-} from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { BreakPoint, BREAKPOINTS } from '@angular/flex-layout';
-import { takeUntil } from 'rxjs/operators';
-import { EnterViewportDirective } from '@mralexandernickel/ngx-intersection';
-import { FALLBACK_IMAGE } from './ngx-fallback-image.token';
-import { INgxImage, INgxImageSet, INgxPictureSet } from './typings';
-import { DomSanitizer } from '@angular/platform-browser';
-import { NgxPictureCacheService } from './ngx-picture-cache.service';
 import { isPlatformBrowser } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  PLATFORM_ID,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
+import { BreakPoint, BREAKPOINTS } from '@angular/flex-layout';
+import { DomSanitizer } from '@angular/platform-browser';
+import { IntersectionPresentStartDirective } from '@mralexandernickel/ngx-intersection';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { FALLBACK_IMAGE } from './ngx-fallback-image.token';
+import { NgxPictureCacheService } from './ngx-picture-cache.service';
+import { INgxImage, INgxImageSet, INgxPictureSet } from './typings';
 
 export function isDataUri(img: HTMLImageElement): boolean {
   return img.src.slice(0, 5) === 'data:';
@@ -46,8 +46,8 @@ export class NgxPictureComponent
     boolean
   >();
 
-  @ViewChild('libEnterViewport', { static: false })
-  public libEnterViewport: EnterViewportDirective;
+  @ViewChild('ngxIntersectionPresentStart', { static: false })
+  public ngxIntersectionPresentStart: IntersectionPresentStartDirective;
 
   @Input() public fallbackImage: INgxImage;
 
@@ -114,7 +114,7 @@ export class NgxPictureComponent
         .subscribe(result => {
           if (result.matches) {
             this.currentSize = size;
-            this.libEnterViewport.observeRestart();
+            this.ngxIntersectionPresentStart.observeRestart();
             this.cr.markForCheck();
           }
         });
@@ -282,7 +282,7 @@ export class NgxPictureComponent
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.images && !changes.images.isFirstChange()) {
-      this.libEnterViewport.observeRestart();
+      this.ngxIntersectionPresentStart.observeRestart();
     }
   }
 
