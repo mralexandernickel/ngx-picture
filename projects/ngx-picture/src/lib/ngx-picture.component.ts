@@ -46,7 +46,7 @@ export class NgxPictureComponent
     boolean
   >();
 
-  @ViewChild('ngxIntersectionPresentStart', { static: false })
+  @ViewChild('ngxIntersectionPresentStart')
   public ngxIntersectionPresentStart: IntersectionPresentStartDirective;
 
   @Input() public fallbackImage: INgxImage;

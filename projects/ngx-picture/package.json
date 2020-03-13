@@ -1,14 +1,14 @@
 {
   "name": "@mralexandernickel/ngx-picture",
-  "version": "0.9.1",
+  "version": "1.0.0",
   "publishConfig": {
     "access": "public"
   },
   "peerDependencies": {
-    "@angular/common": "~8.2.4",
-    "@angular/core": "~8.2.4",
-    "@angular/cdk": "^8.1.4",
-    "@angular/flex-layout": "^8.0.0-beta.27",
-    "@mralexandernickel/ngx-intersection": "^0.9.0"
+    "@angular/common": ">8.0.0",
+    "@angular/core": ">8.0.0",
+    "@angular/cdk": ">8.0.0",
+    "@angular/flex-layout": "^8.0.0",
+    "@mralexandernickel/ngx-intersection": "^1.0.8"
   }
 }

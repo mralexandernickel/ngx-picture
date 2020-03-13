@@ -1,10 +1,9 @@
+import { SimpleChange } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { NgxPictureComponent } from './ngx-picture.component';
-import { createImages } from './images.mock.spec';
 import { BREAKPOINTS, DEFAULT_BREAKPOINTS } from '@angular/flex-layout';
-import { AngularIntersectionModule } from '@mralexandernickel/ngx-intersection';
-import { SimpleChanges, SimpleChange } from '@angular/core';
+import { IntersectionDirectivesModule } from '@mralexandernickel/ngx-intersection';
+import { createImages } from './images.mock.spec';
+import { NgxPictureComponent } from './ngx-picture.component';
 
 describe('PictureComponent', () => {
   let component: NgxPictureComponent;
@@ -12,7 +11,7 @@ describe('PictureComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [AngularIntersectionModule],
+      imports: [IntersectionDirectivesModule],
       declarations: [NgxPictureComponent],
       providers: [
         {
@@ -129,7 +128,7 @@ describe('PictureComponent', () => {
   it('should call observeRestart if its not the first change', () => {
     const change = new SimpleChange('', '', false);
     const spyObserveRestart: jasmine.Spy = spyOn(
-      component.libEnterViewport,
+      component.ngxIntersectionPresentStart,
       'observeRestart'
     );
     component.ngOnChanges({ images: change });
@@ -139,7 +138,7 @@ describe('PictureComponent', () => {
   it('should do nothing if its the first change', () => {
     const change = new SimpleChange('', '', true);
     const spyObserveRestart: jasmine.Spy = spyOn(
-      component.libEnterViewport,
+      component.ngxIntersectionPresentStart,
       'observeRestart'
     );
     component.ngOnChanges({ images: change });
@@ -263,14 +262,14 @@ describe('PictureComponent', () => {
       component,
       'isBrowser'
     ).and.returnValue(false);
-    spyOn(component, 'subscribeBreakpoints').and.returnValue(false);
+    spyOn(component, 'subscribeBreakpoints').and.returnValue();
     const intialImage = component.ngOnInit();
     expect(intialImage).toEqual(imageSet.lg.hiRes);
   });
 
   it('should leave the fallbackImage as initialImage if there is not images set', () => {
     spyOn(component, 'isBrowser').and.returnValue(false);
-    spyOn(component, 'subscribeBreakpoints').and.returnValue(false);
+    spyOn(component, 'subscribeBreakpoints').and.returnValue();
     component.currentSize = 'md';
     component.images = {
       md: {
